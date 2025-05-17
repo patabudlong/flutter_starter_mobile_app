@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Email',
                       hintStyle: TextStyle(
                         color: Colors.white.withOpacity(0.7),
-                        fontSize: 15,
+                        fontSize: 16,
                       ),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Password',
                       hintStyle: TextStyle(
                         color: Colors.white.withOpacity(0.7),
-                        fontSize: 15,
+                        fontSize: 16,
                       ),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                     child: const Text(
