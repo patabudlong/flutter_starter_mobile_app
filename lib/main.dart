@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_starter_mobile_app/screens/main_screen.dart';
+import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/login_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
           unselectedItemColor: Colors.grey,
         ),
       ),
-      home: const MainScreen(),
+      // home: const MainScreen(),
+      home: const LoginScreen(),
     );
   }
 }
