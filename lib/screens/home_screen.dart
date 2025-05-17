@@ -8,11 +8,18 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseLayout(
       title: 'Home',
+      showCustomHeader: true,
       actions: [
+        IconButton(
+          icon: const Icon(Icons.notifications),
+          onPressed: () {
+            // Handle notifications
+          },
+        ),
         IconButton(
           icon: const Icon(Icons.settings),
           onPressed: () {
-            // Handle settings tap
+            // Handle settings
           },
         ),
       ],
