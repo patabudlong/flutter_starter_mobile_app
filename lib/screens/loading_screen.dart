@@ -129,7 +129,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                                   Text(
                                     "We're having trouble connecting to our servers right now. Please check your internet connection and try again.\n\nIf the problem persists, please contact our Customer Support team for assistance.",
                                     style: TextStyle(
-                                      color: ThemeUtils.textColor,
+                                      color: ThemeUtils.warningColor,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
