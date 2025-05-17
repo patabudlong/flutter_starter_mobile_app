@@ -57,13 +57,18 @@ app.*.map.json
 */.gradle/
 
 # Flutter/Dart generated plugin files
-# Flutter/Dart generated files
 **/GeneratedPluginRegistrant.swift
 **/generated_plugins.cmake
 **/generated_plugin_registrant.cc
 **/generated_plugin_registrant.h
 **/generated_plugin_registrant.*
-.dart_tool/flutter_build/
+
+# Platform specific
 macos/Flutter/GeneratedPluginRegistrant.*
 linux/flutter/generated_plugin_registrant.*
 windows/flutter/generated_plugin_registrant.*
+linux/flutter/generated_plugins.cmake
+windows/flutter/generated_plugins.cmake
+
+# Flutter build directory
+.dart_tool/flutter_build/
