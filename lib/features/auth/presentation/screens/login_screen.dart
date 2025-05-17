@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/screens/main_screen.dart';
 import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
+import 'package:flutter_starter_mobile_app/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,10 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  // Temp credentials
-  static const _tempEmail = 'test@test.com';
-  static const _tempPassword = 'Use8to32!';
+  bool _isLoading = false;
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -50,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _handleSignIn() {
+  void _handleSignIn() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
@@ -83,7 +81,20 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    if (email == _tempEmail && password == _tempPassword) {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final authService = AuthService();
+    final result = await authService.login(email, password);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (!mounted) return;
+
+    if (result['success']) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const MainScreen(),
@@ -96,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Expanded(
                 child: Text(
-                  'Invalid email or password',
+                  result['message'],
                   style: TextStyle(color: ThemeUtils.textColor),
                 ),
               ),
@@ -261,13 +272,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          child: const Text(
-                            'Sign In',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Text(
+                                  'Sign In',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 16),

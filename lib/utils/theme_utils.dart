@@ -27,6 +27,10 @@ class ThemeUtils {
         dotenv.get('THEME_DANGER', fallback: '#F44336'),
       );
 
+  static Color get warningColor => getColorFromHex(
+        dotenv.get('THEME_WARNING', fallback: '#FFB300'),
+      );
+
   static LinearGradient get backgroundGradient => LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
