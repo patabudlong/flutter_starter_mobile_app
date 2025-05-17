@@ -10,6 +10,7 @@ class HomeScreen extends StatelessWidget {
     return BaseLayout(
       title: 'Home',
       showCustomHeader: true,
+      showProfilePicture: true,
       actions: [
         IconButton(
           icon: const Icon(Icons.notifications),

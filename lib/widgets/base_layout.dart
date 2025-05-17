@@ -6,6 +6,7 @@ class BaseLayout extends StatelessWidget {
   final String? title;
   final bool showAppBar;
   final bool showCustomHeader;
+  final bool showProfilePicture;
   final List<Widget>? actions;
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
@@ -16,6 +17,7 @@ class BaseLayout extends StatelessWidget {
     this.title,
     this.showAppBar = false,
     this.showCustomHeader = false,
+    this.showProfilePicture = false,
     this.actions,
     this.floatingActionButton,
     this.bottomNavigationBar,
@@ -37,6 +39,7 @@ class BaseLayout extends StatelessWidget {
               CustomHeader(
                 title: title!,
                 actions: actions,
+                showProfilePicture: showProfilePicture,
               ),
             Expanded(child: child),
           ],
