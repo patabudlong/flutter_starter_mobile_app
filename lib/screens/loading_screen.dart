@@ -3,6 +3,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
 import 'package:flutter_starter_mobile_app/services/api_service.dart';
 import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:flutter_starter_mobile_app/services/auth_service.dart';
+import 'package:flutter_starter_mobile_app/screens/home_screen.dart';
+import 'package:flutter_starter_mobile_app/screens/main_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -14,6 +17,7 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   bool _showError = false;
   bool _isLoading = false;
+  final AuthService _authService = AuthService();
 
   @override
   void initState() {
@@ -44,11 +48,21 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     if (isHealthy) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
-        ),
-      );
+      // Check if user is authenticated
+      final isAuthenticated = await _authService.isAuthenticated();
+      if (isAuthenticated) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const MainScreen(), // Change HomeScreen to MainScreen
+          ),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

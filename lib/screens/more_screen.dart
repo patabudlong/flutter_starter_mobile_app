@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
+import 'package:flutter_starter_mobile_app/services/auth_service.dart';
 import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/login_screen.dart';
 
 class MoreScreen extends StatelessWidget {
   const MoreScreen({super.key});
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final authService = AuthService();
+    await authService.logout();
+    
+    if (context.mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (route) => false,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,14 +113,7 @@ class MoreScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                      (route) => false,
-                    );
-                  },
+                  onPressed: () => _handleLogout(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: ThemeUtils.dangerColor,
                     foregroundColor: ThemeUtils.textColor,

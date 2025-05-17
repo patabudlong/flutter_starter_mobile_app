@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'token_service.dart';
 
 class AuthService {
   static final AuthService _instance = AuthService._internal();
@@ -8,6 +9,7 @@ class AuthService {
   AuthService._internal();
 
   final String baseUrl = dotenv.get('BASE_URL');
+  final TokenService _tokenService = TokenService();
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
@@ -31,9 +33,22 @@ class AuthService {
       print('Response body: ${response.body}'); // Debug log
 
       if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        
+        // Store tokens and user data
+        await _tokenService.saveTokens(
+          accessToken: responseData['access_token'], // adjust key based on your API response
+          refreshToken: responseData['refresh_token'], // adjust key based on your API response
+        );
+        
+        // If you have user data in the response, store it
+        if (responseData['user'] != null) {
+          await _tokenService.saveUserData(responseData['user']);
+        }
+
         return {
           'success': true,
-          'data': json.decode(response.body),
+          'data': responseData,
         };
       }
 
@@ -62,5 +77,13 @@ class AuthService {
         'message': 'Connection error',
       };
     }
+  }
+
+  Future<void> logout() async {
+    await _tokenService.clearAll();
+  }
+
+  Future<bool> isAuthenticated() async {
+    return await _tokenService.hasToken();
   }
 } 
