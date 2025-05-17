@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/login_screen.dart';
 
 class MoreScreen extends StatelessWidget {
@@ -51,7 +52,7 @@ class MoreScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Settings & More',
+                      '${dotenv.env['APP_NAME'] ?? 'Your App'}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -63,6 +64,38 @@ class MoreScreen extends StatelessWidget {
               ],
             ),
           ),
+          actions: [
+            Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.mail_outline, color: Colors.white),
+                  onPressed: () {},
+                ),
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Text(
+                      '3',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            IconButton(
+              icon: const Icon(Icons.qr_code_scanner, color: Colors.white),
+              onPressed: () {},
+            ),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
