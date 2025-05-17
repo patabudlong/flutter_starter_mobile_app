@@ -51,3 +51,7 @@ app.*.map.json
 
 # Keep example file
 !.env.example
+
+# Ignore all files in the android directory
+.gradle/
+*/.gradle/
