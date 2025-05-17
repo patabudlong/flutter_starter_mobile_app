@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -7,15 +8,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF00BCD4), // Lighter blue at top
-            Color(0xFF1565C0), // Darker blue at bottom
-          ],
-        ),
+      decoration: BoxDecoration(
+        gradient: ThemeUtils.backgroundGradient,
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,

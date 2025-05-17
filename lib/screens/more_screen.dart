@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
+import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/login_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class MoreScreen extends StatelessWidget {
+  const MoreScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +38,17 @@ class ProfileScreen extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Welcome back,',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: ThemeUtils.textColorSecondary,
                         fontSize: 14,
                       ),
                     ),
                     Text(
-                      '${dotenv.env['APP_NAME'] ?? 'Your App'}',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      dotenv.get('APP_NAME', fallback: 'Your App'),
+                      style: TextStyle(
+                        color: ThemeUtils.textColor,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -90,22 +91,42 @@ class ProfileScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: const SingleChildScrollView(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 8,
-            bottom: 16,
-          ),
-          child: Center(
-            child: Text(
-              'Profile Screen',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const Spacer(),
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ThemeUtils.dangerColor,
+                    foregroundColor: ThemeUtils.textColor,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: ThemeUtils.borderRadius,
+                    ),
+                  ),
+                  child: const Text(
+                    'Logout',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 24),
+            ],
           ),
         ),
       ),

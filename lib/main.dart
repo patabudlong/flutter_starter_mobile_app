@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_starter_mobile_app/screens/main_screen.dart';
+import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,23 +15,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: dotenv.get('APP_NAME', fallback: 'Your App'),
       theme: ThemeData(
-        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2196F3), // Material Blue
-          primary: const Color(0xFF2196F3),
-          secondary: const Color(0xFF1565C0),
-          background: const Color(0xFF1565C0),
+          seedColor: ThemeUtils.primaryColor,
+          primary: ThemeUtils.primaryColor,
+          secondary: ThemeUtils.secondaryColor,
+          background: ThemeUtils.secondaryColor,
         ),
-        scaffoldBackgroundColor: const Color(0xFF2196F3),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Colors.white,
-          selectedItemColor: Color(0xFF2196F3),
-          unselectedItemColor: Colors.grey,
-        ),
+        scaffoldBackgroundColor: ThemeUtils.primaryColor,
       ),
-      home: const MainScreen(),
+      home: const LoginScreen(),
     );
   }
 }
