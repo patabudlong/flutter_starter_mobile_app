@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
+import 'package:flutter_starter_mobile_app/screens/loading_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: ThemeUtils.primaryColor,
       ),
-      home: const LoginScreen(),
+      home: const LoadingScreen(),
     );
   }
 }
