@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/screens/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -53,11 +54,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 80),
+                      Text(
+                        dotenv.get('APP_NAME', fallback: 'Your App'),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
                       const Text(
                         'Welcome Back',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 32,
+                          fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,
@@ -108,15 +119,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               horizontal: 20,
                               vertical: 16,
                             ),
-                            suffixIcon: TextButton(
-                              onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
-                              child: Text(
-                                _obscurePassword ? 'Show' : 'Hide',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword 
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                                color: Colors.white,
+                                size: 22,
                               ),
+                              onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                             ),
                           ),
                         ),
