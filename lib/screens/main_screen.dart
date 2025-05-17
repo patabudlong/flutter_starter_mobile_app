@@ -11,12 +11,19 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const ProfileScreen(),
-    const Placeholder(), // Placeholder for Settings screen
-  ];
+  
+  // Initialize screens in initState to handle hot reload better
+  late final List<Widget> _screens;
+  
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      const HomeScreen(),
+      const ProfileScreen(),
+      const Placeholder(), // Placeholder for Settings screen
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -27,7 +34,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
