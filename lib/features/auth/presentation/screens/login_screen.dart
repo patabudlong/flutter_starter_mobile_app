@@ -19,6 +19,37 @@ class _LoginScreenState extends State<LoginScreen> {
   static const _tempEmail = 'test@test.com';
   static const _tempPassword = 'Use8to32!';
 
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(color: ThemeUtils.textColor),
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.close,
+                color: ThemeUtils.textColor,
+                size: 20,
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+            ),
+          ],
+        ),
+        backgroundColor: ThemeUtils.dangerColor,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 4),
+      ),
+    );
+  }
+
   void _handleSignIn() {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
@@ -26,9 +57,25 @@ class _LoginScreenState extends State<LoginScreen> {
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Please enter both email and password',
-            style: TextStyle(color: ThemeUtils.textColor),
+          content: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Please enter both email and password',
+                  style: TextStyle(color: ThemeUtils.textColor),
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: ThemeUtils.textColor,
+                  size: 20,
+                ),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              ),
+            ],
           ),
           backgroundColor: ThemeUtils.dangerColor,
         ),
@@ -45,9 +92,25 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Invalid email or password',
-            style: TextStyle(color: ThemeUtils.textColor),
+          content: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Invalid email or password',
+                  style: TextStyle(color: ThemeUtils.textColor),
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: ThemeUtils.textColor,
+                  size: 20,
+                ),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              ),
+            ],
           ),
           backgroundColor: ThemeUtils.dangerColor,
         ),
