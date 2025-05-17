@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_starter_mobile_app/screens/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,6 +10,15 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
+
+  void _handleSignIn() {
+    // Later you can add actual authentication logic here
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => const MainScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 55,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _handleSignIn,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFF8C00),
                       foregroundColor: Colors.white,

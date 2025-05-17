@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_mobile_app/screens/home_screen.dart';
 import 'package:flutter_starter_mobile_app/screens/profile_screen.dart';
+import 'package:flutter_starter_mobile_app/screens/more_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
     _screens = [
       const HomeScreen(),
       const ProfileScreen(),
-      const Placeholder(), // For More screen
+      const MoreScreen(), // Add MoreScreen
     ];
   }
 
