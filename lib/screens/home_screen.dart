@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_mobile_app/widgets/base_layout.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,22 +11,18 @@ class HomeScreen extends StatelessWidget {
       title: 'Home',
       showCustomHeader: true,
       showProfilePicture: true,
-      actions: [
+      actions: const [
         IconButton(
-          icon: const Icon(Icons.notifications),
-          onPressed: () {
-            // Handle notifications
-          },
+          icon: Icon(Icons.notifications),
+          onPressed: null,
         ),
         IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () {
-            // Handle settings
-          },
+          icon: Icon(Icons.settings),
+          onPressed: null,
         ),
       ],
-      child: const Center(
-        child: Text('Welcome to Your App!'),
+      child: Center(
+        child: Text('Welcome to ${dotenv.env['APP_NAME'] ?? 'Your App'}'),
       ),
     );
   }
