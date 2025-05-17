@@ -1,16 +1,27 @@
-# flutter_starter_mobile_app
+# Flutter Starter Mobile Application
 
-A new Flutter project.
+This repository serves as a foundational Flutter starter project for mobile application development. It is a personal initiative aimed at establishing a clean, scalable, and maintainable codebase to accelerate the development of cross-platform mobile applications for both Android and iOS.
 
-## Getting Started
+## Key Features
 
-This project is a starting point for a Flutter application.
+- Well-structured project architecture adhering to Flutter best practices
+- Essential UI components and navigation setup for rapid prototyping
+- Configured for seamless cross-platform deployment
+- Easily extensible to incorporate advanced features and third-party integrations
 
-A few resources to get you started if this is your first Flutter project:
+This project is intended as a professional baseline for personal development, experimentation, and skill enhancement in Flutter mobile app development.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## About Me
+
+**Peregrino "Jun" Tabudlong Jr**  
+Full Stack Developer
+
+Feel free to connect if you want to discuss this project or Flutter development in general.
+
+## Contact
+
+**Email:** [peregrino.tabudlong@gmail.com](peregrino.tabudlong@gmail.com)  
+**Mobile:** +63 898 800 5598  
+**WhatsApp:** [+63 898 800 5598](https://wa.me/638988005598)
