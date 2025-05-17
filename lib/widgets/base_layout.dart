@@ -1,0 +1,38 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_starter_mobile_app/widgets/custom_header.dart';
+
+class BaseLayout extends StatelessWidget {
+  final Widget child;
+  final String? title;
+  final bool showAppBar;
+  final bool showCustomHeader;
+  final bool showProfilePicture;
+  final List<Widget>? actions;
+  final Widget? floatingActionButton;
+
+  const BaseLayout({
+    super.key,
+    required this.child,
+    this.title,
+    this.showAppBar = false,
+    this.showCustomHeader = false,
+    this.showProfilePicture = false,
+    this.actions,
+    this.floatingActionButton,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (showCustomHeader && title != null)
+          CustomHeader(
+            title: title!,
+            actions: actions,
+            showProfilePicture: showProfilePicture,
+          ),
+        Expanded(child: child),
+      ],
+    );
+  }
+} 
