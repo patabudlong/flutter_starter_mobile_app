@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_mobile_app/widgets/base_layout.dart';
-import 'package:flutter_starter_mobile_app/screens/home_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -19,31 +18,6 @@ class ProfileScreen extends StatelessWidget {
           },
         ),
       ],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1, // Set to profile tab
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
-          }
-          // Add other navigation cases later
-        },
-      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
