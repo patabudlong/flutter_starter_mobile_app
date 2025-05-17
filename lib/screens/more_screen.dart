@@ -30,9 +30,10 @@ class MoreScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         appBar: const CustomAppBar(
           title: 'Settings',
-          showProfile: false,
-          showNotification: false,
-          showScanner: false,
+          showProfile: true,
+          showNotification: true,
+          showScanner: true,
+          userName: 'Flutter Starter App',
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),

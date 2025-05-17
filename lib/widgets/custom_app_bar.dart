@@ -11,6 +11,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onProfileTap;
   final VoidCallback? onNotificationTap;
   final VoidCallback? onScannerTap;
+  final String? userName;
 
   const CustomAppBar({
     super.key,
@@ -22,6 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onProfileTap,
     this.onNotificationTap,
     this.onScannerTap,
+    this.userName,
   });
 
   @override
@@ -64,7 +66,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               Text(
-                '${dotenv.env['APP_NAME'] ?? 'Your App'}',
+                userName ?? dotenv.env['APP_NAME'] ?? 'Your App',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,

@@ -16,9 +16,10 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         appBar: const CustomAppBar(
           title: 'Profile',
-          showProfile: false,
+          showProfile: true,
           showNotification: true,
-          showScanner: false,
+          showScanner: true,
+          userName: 'Flutter Starter App',
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
