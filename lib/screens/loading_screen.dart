@@ -207,8 +207,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
                               ),
                             ),
                           ] else
-                            CircularProgressIndicator(
-                              color: ThemeUtils.textColor,
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: CircularProgressIndicator.adaptive(
+                                backgroundColor: ThemeUtils.primaryColor.withOpacity(0.2),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  ThemeUtils.accentColor,
+                                ),
+                                strokeWidth: 4,
+                              ),
                             ),
                         ],
                       ),
