@@ -10,6 +10,7 @@ class ProfileScreen extends StatelessWidget {
     return BaseLayout(
       title: 'Profile',
       showCustomHeader: true,
+      showProfilePicture: true,
       actions: [
         IconButton(
           icon: const Icon(Icons.edit),
