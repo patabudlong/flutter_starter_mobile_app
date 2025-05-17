@@ -21,14 +21,8 @@ class _MainScreenState extends State<MainScreen> {
     _screens = [
       const HomeScreen(),
       const ProfileScreen(),
-      const Placeholder(), // Placeholder for Settings screen
+      const Placeholder(), // For More screen
     ];
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   @override
@@ -38,23 +32,39 @@ class _MainScreenState extends State<MainScreen> {
         index: _selectedIndex,
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Colors.white24, width: 0.5),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: (index) => setState(() => _selectedIndex = index),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white.withOpacity(0.5),
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_outlined),
+              activeIcon: Icon(Icons.dashboard),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.explore_outlined),
+              activeIcon: Icon(Icons.explore),
+              label: 'Explore',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.more_horiz),
+              activeIcon: Icon(Icons.more_horiz),
+              label: 'More',
+            ),
+          ],
+        ),
       ),
     );
   }
