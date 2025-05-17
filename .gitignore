@@ -72,3 +72,14 @@ windows/flutter/generated_plugins.cmake
 
 # Flutter build directory
 .dart_tool/flutter_build/
+
+# Flutter/Dart plugin registration files
+**/generated_plugin_registrant.h
+**/generated_plugin_registrant.cc
+**/GeneratedPluginRegistrant.*
+**/generated_plugins.cmake
+
+# Platform specific
+linux/flutter/generated_*
+windows/flutter/generated_*
+macos/Flutter/GeneratedPluginRegistrant.*
