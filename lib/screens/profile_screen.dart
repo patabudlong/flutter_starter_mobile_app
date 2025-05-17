@@ -1,53 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
 import 'package:flutter_starter_mobile_app/widgets/custom_app_bar.dart';
 import 'package:flutter_starter_mobile_app/services/token_service.dart';
+import 'package:flutter_starter_mobile_app/services/api_service.dart';
+import 'package:flutter_starter_mobile_app/models/user.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
-  Future<Map<String, dynamic>?> _getUserData() async {
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final _apiService = ApiService();
+  User? _user;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
     final tokenService = TokenService();
-    return await tokenService.getUserData();
+    final userData = await tokenService.getUserData();
+    
+    if (userData != null && userData['id'] != null) {
+      final response = await _apiService.getUserDetails(userData['id']);
+      if (response['success'] && mounted) {
+        setState(() {
+          _user = User.fromJson(response['data']);
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>?>(
-      future: _getUserData(),
-      builder: (context, snapshot) {
-        final userData = snapshot.data;
-        return Container(
-          decoration: BoxDecoration(
-            gradient: ThemeUtils.backgroundGradient,
-          ),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: CustomAppBar(
-              title: 'Profile',
-              showProfile: true,
-              showNotification: true,
-              showScanner: true,
-              userName: userData?['name'] ?? 'User',
-              userEmail: userData?['email'] ?? 'Welcome back,',
-              userId: userData?['id']?.toString(),
-            ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  _buildProfileHeader(),
-                  const SizedBox(height: 24),
-                  _buildProfileStats(),
-                  const SizedBox(height: 24),
-                  _buildProfileMenu(),
-                ],
+    return Container(
+      decoration: BoxDecoration(
+        gradient: ThemeUtils.backgroundGradient,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: CustomAppBar(
+          title: 'Profile',
+          showProfile: true,
+          showNotification: true,
+          showScanner: true,
+          userName: _user?.fullName,
+          userEmail: _user?.email,
+          userId: _user?.id,
+          firstName: _user?.firstName,
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _buildProfileHeader(),
+                    const SizedBox(height: 24),
+                    _buildProfileDetails(),
+                    const SizedBox(height: 24),
+                    _buildProfileMenu(),
+                  ],
+                ),
               ),
-            ),
-          ),
-        );
-      },
+      ),
     );
   }
 
@@ -69,7 +92,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          dotenv.env['APP_NAME'] ?? 'Your App',
+          _user?.fullName ?? 'User',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 24,
@@ -78,7 +101,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'user@example.com',
+          _user?.email ?? '',
           style: TextStyle(
             color: Colors.white.withOpacity(0.7),
             fontSize: 16,
@@ -88,55 +111,65 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileStats() {
+  Widget _buildProfileDetails() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Column(
         children: [
-          _buildStatItem('Points', '1,234'),
-          _buildStatItem('Rank', '#42'),
-          _buildStatItem('Tasks', '85'),
+          _buildDetailRow('First Name', _user?.firstName ?? ''),
+          _buildDetailRow('Middle Name', _user?.middleName ?? ''),
+          _buildDetailRow('Last Name', _user?.lastName ?? ''),
+          _buildDetailRow('Extension', _user?.extensionName ?? ''),
+          _buildDetailRow('Username', _user?.username ?? ''),
+          _buildDetailRow('Member Since', _formatDate(_user?.createdAt)),
+          _buildDetailRow('Last Updated', _formatDate(_user?.updatedAt)),
         ],
       ),
     );
   }
 
-  Widget _buildStatItem(String label, String value) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 14,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.7),
-            fontSize: 14,
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
+  }
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return '';
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
   Widget _buildProfileMenu() {
     return Column(
       children: [
-        _buildMenuItem(Icons.person_outline, 'Edit Profile'),
-        _buildMenuItem(Icons.settings_outlined, 'Settings'),
-        _buildMenuItem(Icons.help_outline, 'Help & Support'),
-        _buildMenuItem(Icons.privacy_tip_outlined, 'Privacy Policy'),
-        _buildMenuItem(Icons.description_outlined, 'Terms of Service'),
+        _buildMenuItem(Icons.edit, 'Edit Profile'),
+        _buildMenuItem(Icons.lock_outline, 'Change Password'),
+        _buildMenuItem(Icons.notifications_outlined, 'Notifications'),
+        _buildMenuItem(Icons.privacy_tip_outlined, 'Privacy Settings'),
       ],
     );
   }

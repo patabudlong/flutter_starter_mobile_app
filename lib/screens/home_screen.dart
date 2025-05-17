@@ -2,75 +2,97 @@ import 'package:flutter/material.dart';
 import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
 import 'package:flutter_starter_mobile_app/widgets/custom_app_bar.dart';
 import 'package:flutter_starter_mobile_app/services/token_service.dart';
+import 'package:flutter_starter_mobile_app/services/api_service.dart';
+import 'package:flutter_starter_mobile_app/models/user.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  Future<Map<String, dynamic>?> _getUserData() async {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _apiService = ApiService();
+  User? _user;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
     final tokenService = TokenService();
-    return await tokenService.getUserData();
+    final userData = await tokenService.getUserData();
+    
+    if (userData != null && userData['id'] != null) {
+      final response = await _apiService.getUserDetails(userData['id']);
+      if (response['success'] && mounted) {
+        setState(() {
+          _user = User.fromJson(response['data']);
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>?>(
-      future: _getUserData(),
-      builder: (context, snapshot) {
-        final userData = snapshot.data;
-        return Container(
-          decoration: BoxDecoration(
-            gradient: ThemeUtils.backgroundGradient,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: ThemeUtils.backgroundGradient,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: CustomAppBar(
+          userName: _user?.fullName,
+          userEmail: _user?.email,
+          userId: _user?.id,
+          firstName: _user?.firstName,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 8,
+            bottom: 16,
           ),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: CustomAppBar(
-              userName: userData?['name'] ?? 'User',
-              userEmail: userData?['email'] ?? 'Welcome back,',
-              userId: userData?['id']?.toString(),
-            ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 8,
-                bottom: 16,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Recent Activity',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Recent Activity',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildActivityCard('Activity 1', '2 hours ago'),
-                  _buildActivityCard('Activity 2', '2 hours ago'),
-                  _buildActivityCard('Activity 3', '2 hours ago'),
-                  const SizedBox(height: 32),
-                  const Text(
-                    'Your Stats',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildStatCard('Total Points', '1,234'),
-                  _buildStatCard('Completed Tasks', '42'),
-                  _buildStatCard('Current Streak', '7 days'),
-                  _buildStatCard('Achievement Rate', '85%'),
-                  _buildStatCard('Total Time', '127 hours'),
-                ],
+              const SizedBox(height: 16),
+              _buildActivityCard('Activity 1', '2 hours ago'),
+              _buildActivityCard('Activity 2', '2 hours ago'),
+              _buildActivityCard('Activity 3', '2 hours ago'),
+              const SizedBox(height: 32),
+              const Text(
+                'Your Stats',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+              const SizedBox(height: 16),
+              _buildStatCard('Total Points', '1,234'),
+              _buildStatCard('Completed Tasks', '42'),
+              _buildStatCard('Current Streak', '7 days'),
+              _buildStatCard('Achievement Rate', '85%'),
+              _buildStatCard('Total Time', '127 hours'),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 

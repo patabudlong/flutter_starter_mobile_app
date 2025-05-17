@@ -14,6 +14,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? userName;
   final String? userEmail;
   final String? userId;
+  final String? firstName;
 
   const CustomAppBar({
     super.key,
@@ -28,6 +29,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.userName,
     this.userEmail,
     this.userId,
+    this.firstName,
   });
 
   @override
@@ -74,7 +76,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
                 Text(
-                  userEmail ?? '',
+                  firstName ?? '',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,

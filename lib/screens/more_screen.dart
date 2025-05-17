@@ -5,13 +5,40 @@ import 'package:flutter_starter_mobile_app/widgets/custom_app_bar.dart';
 import 'package:flutter_starter_mobile_app/services/auth_service.dart';
 import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter_starter_mobile_app/services/token_service.dart';
+import 'package:flutter_starter_mobile_app/services/api_service.dart';
+import 'package:flutter_starter_mobile_app/models/user.dart';
 
-class MoreScreen extends StatelessWidget {
+class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
 
-  Future<Map<String, dynamic>?> _getUserData() async {
+  @override
+  State<MoreScreen> createState() => _MoreScreenState();
+}
+
+class _MoreScreenState extends State<MoreScreen> {
+  final _apiService = ApiService();
+  User? _user;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
     final tokenService = TokenService();
-    return await tokenService.getUserData();
+    final userData = await tokenService.getUserData();
+    
+    if (userData != null && userData['id'] != null) {
+      final response = await _apiService.getUserDetails(userData['id']);
+      if (response['success'] && mounted) {
+        setState(() {
+          _user = User.fromJson(response['data']);
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   Future<void> _handleLogout(BuildContext context) async {
@@ -28,99 +55,94 @@ class MoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>?>(
-      future: _getUserData(),
-      builder: (context, snapshot) {
-        final userData = snapshot.data;
-        return Container(
-          decoration: BoxDecoration(
-            gradient: ThemeUtils.backgroundGradient,
-          ),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: CustomAppBar(
-              title: 'Settings',
-              showProfile: true,
-              showNotification: true,
-              showScanner: true,
-              userName: userData?['name'] ?? 'User',
-              userEmail: userData?['email'] ?? 'Welcome back,',
-              userId: userData?['id']?.toString(),
-            ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle('Account'),
-                  _buildMenuItem(
-                    icon: Icons.person_outline,
-                    title: 'Profile Settings',
-                    onTap: () {},
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.notifications_outlined,
-                    title: 'Notifications',
-                    onTap: () {},
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.lock_outline,
-                    title: 'Privacy',
-                    onTap: () {},
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.security,
-                    title: 'Security',
-                    onTap: () {},
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  _buildSectionTitle('Preferences'),
-                  _buildMenuItem(
-                    icon: Icons.language,
-                    title: 'Language',
-                    subtitle: 'English',
-                    onTap: () {},
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.dark_mode_outlined,
-                    title: 'Theme',
-                    subtitle: 'Dark',
-                    onTap: () {},
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  _buildSectionTitle('Support'),
-                  _buildMenuItem(
-                    icon: Icons.help_outline,
-                    title: 'Help Center',
-                    onTap: () {},
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.feedback_outlined,
-                    title: 'Send Feedback',
-                    onTap: () {},
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.info_outline,
-                    title: 'About',
-                    onTap: () {},
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  _buildMenuItem(
-                    icon: Icons.logout,
-                    title: 'Logout',
-                    textColor: ThemeUtils.dangerColor,
-                    onTap: () => _handleLogout(context),
-                  ),
-                  const SizedBox(height: 24),
-                ],
+    return Container(
+      decoration: BoxDecoration(
+        gradient: ThemeUtils.backgroundGradient,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: CustomAppBar(
+          title: 'Settings',
+          showProfile: true,
+          showNotification: true,
+          showScanner: true,
+          userName: _user?.fullName,
+          userEmail: _user?.email,
+          userId: _user?.id,
+          firstName: _user?.firstName,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSectionTitle('Account'),
+              _buildMenuItem(
+                icon: Icons.person_outline,
+                title: 'Profile Settings',
+                onTap: () {},
               ),
-            ),
+              _buildMenuItem(
+                icon: Icons.notifications_outlined,
+                title: 'Notifications',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.lock_outline,
+                title: 'Privacy',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.security,
+                title: 'Security',
+                onTap: () {},
+              ),
+              
+              const SizedBox(height: 24),
+              _buildSectionTitle('Preferences'),
+              _buildMenuItem(
+                icon: Icons.language,
+                title: 'Language',
+                subtitle: 'English',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.dark_mode_outlined,
+                title: 'Theme',
+                subtitle: 'Dark',
+                onTap: () {},
+              ),
+              
+              const SizedBox(height: 24),
+              _buildSectionTitle('Support'),
+              _buildMenuItem(
+                icon: Icons.help_outline,
+                title: 'Help Center',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.feedback_outlined,
+                title: 'Send Feedback',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.info_outline,
+                title: 'About',
+                onTap: () {},
+              ),
+              
+              const SizedBox(height: 24),
+              _buildMenuItem(
+                icon: Icons.logout,
+                title: 'Logout',
+                textColor: ThemeUtils.dangerColor,
+                onTap: () => _handleLogout(context),
+              ),
+              const SizedBox(height: 24),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
