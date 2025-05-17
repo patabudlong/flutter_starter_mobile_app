@@ -156,7 +156,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                                       ),
                                       const SizedBox(width: 8),
                                       Text(
-                                        'Call us at: ${dotenv.get('SUPPORT_PHONE', fallback: '[Your Support Phone Number]')}',
+                                        dotenv.get('SUPPORT_PHONE', fallback: '[Your Support Phone Number]'),
                                         style: TextStyle(
                                           color: ThemeUtils.textColor,
                                           fontSize: 16,
@@ -165,23 +165,29 @@ class _LoadingScreenState extends State<LoadingScreen> {
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.email_outlined,
-                                        color: ThemeUtils.textColor,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Email: ${dotenv.get('SUPPORT_EMAIL', fallback: 'support@example.com')}',
-                                        style: TextStyle(
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.email_outlined,
                                           color: ThemeUtils.textColor,
-                                          fontSize: 16,
+                                          size: 20,
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(width: 8),
+                                        Flexible(
+                                          child: Text(
+                                            dotenv.get('SUPPORT_EMAIL', fallback: 'support@example.com'),
+                                            style: TextStyle(
+                                              color: ThemeUtils.textColor,
+                                              fontSize: 16,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
