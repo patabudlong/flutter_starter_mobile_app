@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
 import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/login_screen.dart';
 
 class MoreScreen extends StatelessWidget {
@@ -8,15 +9,8 @@ class MoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF00BCD4),
-            Color(0xFF1565C0),
-          ],
-        ),
+      decoration: BoxDecoration(
+        gradient: ThemeUtils.backgroundGradient,
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -31,12 +25,12 @@ class MoreScreen extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.2),
+                    color: ThemeUtils.inputBackgroundColor,
                   ),
                   padding: const EdgeInsets.all(10),
-                  child: const Icon(
+                  child: Icon(
                     Icons.person,
-                    color: Colors.white,
+                    color: ThemeUtils.textColor,
                     size: 24,
                   ),
                 ),
@@ -44,17 +38,17 @@ class MoreScreen extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Welcome back,',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: ThemeUtils.textColorSecondary,
                         fontSize: 14,
                       ),
                     ),
                     Text(
-                      '${dotenv.env['APP_NAME'] ?? 'Your App'}',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      dotenv.get('APP_NAME', fallback: 'Your App'),
+                      style: TextStyle(
+                        color: ThemeUtils.textColor,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -115,11 +109,11 @@ class MoreScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade400,
-                    foregroundColor: Colors.white,
+                    backgroundColor: ThemeUtils.dangerColor,
+                    foregroundColor: ThemeUtils.textColor,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: ThemeUtils.borderRadius,
                     ),
                   ),
                   child: const Text(

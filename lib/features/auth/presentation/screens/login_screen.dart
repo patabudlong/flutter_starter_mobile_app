@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/screens/main_screen.dart';
+import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -28,15 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final minHeight = isLandscape ? screenHeight * 1.5 : screenHeight;
 
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF00BCD4),
-            Color(0xFF1565C0),
-          ],
-        ),
+      decoration: BoxDecoration(
+        gradient: ThemeUtils.backgroundGradient,
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -155,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ElevatedButton(
                           onPressed: _handleSignIn,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF8C00),
+                            backgroundColor: ThemeUtils.accentColor,
                             foregroundColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(

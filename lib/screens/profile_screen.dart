@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -7,15 +8,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF00BCD4),
-            Color(0xFF1565C0),
-          ],
-        ),
+      decoration: BoxDecoration(
+        gradient: ThemeUtils.backgroundGradient,
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -30,12 +24,12 @@ class ProfileScreen extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.2),
+                    color: ThemeUtils.inputBackgroundColor,
                   ),
                   padding: const EdgeInsets.all(10),
-                  child: const Icon(
+                  child: Icon(
                     Icons.person,
-                    color: Colors.white,
+                    color: ThemeUtils.textColor,
                     size: 24,
                   ),
                 ),
