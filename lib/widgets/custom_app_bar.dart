@@ -12,6 +12,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onNotificationTap;
   final VoidCallback? onScannerTap;
   final String? userName;
+  final String? userEmail;
+  final String? userId;
 
   const CustomAppBar({
     super.key,
@@ -24,6 +26,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onNotificationTap,
     this.onScannerTap,
     this.userName,
+    this.userEmail,
+    this.userId,
   });
 
   @override
@@ -42,38 +46,51 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.2),
-            ),
-            padding: const EdgeInsets.all(10),
-            child: const Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 24,
+          GestureDetector(
+            onTap: onProfileTap,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.2),
+              ),
+              padding: const EdgeInsets.all(10),
+              child: const Icon(
+                Icons.person,
+                color: Colors.white,
+                size: 24,
+              ),
             ),
           ),
           const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Welcome back,',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Welcome back,',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              Text(
-                userName ?? dotenv.env['APP_NAME'] ?? 'Your App',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                Text(
+                  userEmail ?? '',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+                if (userId != null)
+                  Text(
+                    'ID: $userId',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 12,
+                    ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),

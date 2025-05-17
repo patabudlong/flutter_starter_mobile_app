@@ -2,38 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
 import 'package:flutter_starter_mobile_app/widgets/custom_app_bar.dart';
+import 'package:flutter_starter_mobile_app/services/token_service.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  Future<Map<String, dynamic>?> _getUserData() async {
+    final tokenService = TokenService();
+    return await tokenService.getUserData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: ThemeUtils.backgroundGradient,
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: const CustomAppBar(
-          title: 'Profile',
-          showProfile: true,
-          showNotification: true,
-          showScanner: true,
-          userName: 'Flutter Starter App',
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              _buildProfileHeader(),
-              const SizedBox(height: 24),
-              _buildProfileStats(),
-              const SizedBox(height: 24),
-              _buildProfileMenu(),
-            ],
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: _getUserData(),
+      builder: (context, snapshot) {
+        final userData = snapshot.data;
+        return Container(
+          decoration: BoxDecoration(
+            gradient: ThemeUtils.backgroundGradient,
           ),
-        ),
-      ),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: CustomAppBar(
+              title: 'Profile',
+              showProfile: true,
+              showNotification: true,
+              showScanner: true,
+              userName: userData?['name'] ?? 'User',
+              userEmail: userData?['email'] ?? 'Welcome back,',
+              userId: userData?['id']?.toString(),
+            ),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  _buildProfileHeader(),
+                  const SizedBox(height: 24),
+                  _buildProfileStats(),
+                  const SizedBox(height: 24),
+                  _buildProfileMenu(),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
