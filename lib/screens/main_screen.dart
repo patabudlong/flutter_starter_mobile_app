@@ -56,9 +56,9 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Dashboard',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.explore_outlined),
-              activeIcon: Icon(Icons.explore),
-              label: 'Explore',
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.more_horiz),
