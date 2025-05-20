@@ -23,6 +23,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _extensionNameController;
   late TextEditingController _usernameController;
   bool _isLoading = false;
+  bool _hasChanges = false;
 
   @override
   void initState() {
@@ -32,10 +33,79 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _lastNameController = TextEditingController(text: widget.user.lastName);
     _extensionNameController = TextEditingController(text: widget.user.extensionName);
     _usernameController = TextEditingController(text: widget.user.username);
+
+    _firstNameController.addListener(_onFieldChanged);
+    _middleNameController.addListener(_onFieldChanged);
+    _lastNameController.addListener(_onFieldChanged);
+    _extensionNameController.addListener(_onFieldChanged);
+    _usernameController.addListener(_onFieldChanged);
+  }
+
+  void _onFieldChanged() {
+    final hasChanges = 
+      _firstNameController.text != widget.user.firstName ||
+      _middleNameController.text != widget.user.middleName ||
+      _lastNameController.text != widget.user.lastName ||
+      _extensionNameController.text != widget.user.extensionName ||
+      _usernameController.text != widget.user.username;
+
+    if (hasChanges != _hasChanges) {
+      setState(() => _hasChanges = hasChanges);
+    }
+  }
+
+  Future<bool> _onWillPop() async {
+    if (!_hasChanges) return true;
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Discard Changes?',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: const Text(
+          'You have unsaved changes. Are you sure you want to discard them?',
+          style: TextStyle(fontSize: 16),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text(
+              'CANCEL',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(
+              'DISCARD',
+              style: TextStyle(
+                color: ThemeUtils.dangerColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return result ?? false;
   }
 
   @override
   void dispose() {
+    _firstNameController.removeListener(_onFieldChanged);
+    _middleNameController.removeListener(_onFieldChanged);
+    _lastNameController.removeListener(_onFieldChanged);
+    _extensionNameController.removeListener(_onFieldChanged);
+    _usernameController.removeListener(_onFieldChanged);
+    
     _firstNameController.dispose();
     _middleNameController.dispose();
     _lastNameController.dispose();
@@ -59,84 +129,95 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: ThemeUtils.backgroundGradient,
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: CustomAppBar(
-          title: 'Edit Profile',
-          showProfile: false,
-          actions: [
-            TextButton(
-              onPressed: _isLoading ? null : _handleSave,
-              child: _isLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : const Text(
-                      'Save',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    ),
-            ),
-          ],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: ThemeUtils.backgroundGradient,
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                _buildProfileImage(),
-                const SizedBox(height: 24),
-                _buildInputField(
-                  controller: _firstNameController,
-                  label: 'First Name',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'First name is required';
-                    }
-                    return null;
-                  },
-                ),
-                _buildInputField(
-                  controller: _middleNameController,
-                  label: 'Middle Name',
-                ),
-                _buildInputField(
-                  controller: _lastNameController,
-                  label: 'Last Name',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Last name is required';
-                    }
-                    return null;
-                  },
-                ),
-                _buildInputField(
-                  controller: _extensionNameController,
-                  label: 'Extension Name',
-                ),
-                _buildInputField(
-                  controller: _usernameController,
-                  label: 'Username',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Username is required';
-                    }
-                    return null;
-                  },
-                ),
-              ],
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: CustomAppBar(
+            title: 'Edit Profile',
+            showProfile: false,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () async {
+                if (await _onWillPop()) {
+                  if (mounted) Navigator.of(context).pop();
+                }
+              },
+            ),
+            actions: [
+              TextButton(
+                onPressed: _isLoading ? null : _handleSave,
+                child: _isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : const Text(
+                        'Save',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+              ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  _buildProfileImage(),
+                  const SizedBox(height: 24),
+                  _buildInputField(
+                    controller: _firstNameController,
+                    label: 'First Name',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'First name is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  _buildInputField(
+                    controller: _middleNameController,
+                    label: 'Middle Name',
+                  ),
+                  _buildInputField(
+                    controller: _lastNameController,
+                    label: 'Last Name',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Last name is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  _buildInputField(
+                    controller: _extensionNameController,
+                    label: 'Extension Name',
+                  ),
+                  _buildInputField(
+                    controller: _usernameController,
+                    label: 'Username',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Username is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
