@@ -197,35 +197,49 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         controller: controller,
         validator: validator,
         style: const TextStyle(color: Colors.white),
+        cursorColor: Colors.white,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(
             color: Colors.white.withOpacity(0.7),
           ),
+          floatingLabelStyle: const TextStyle(
+            color: Colors.white,
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
               color: Colors.white.withOpacity(0.3),
+              width: 1.0,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(
               color: Colors.white,
+              width: 1.5,
             ),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
               color: ThemeUtils.dangerColor,
+              width: 1.0,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
               color: ThemeUtils.dangerColor,
+              width: 1.5,
             ),
           ),
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.1),
         ),
       ),
     );
