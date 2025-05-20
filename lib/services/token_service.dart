@@ -36,12 +36,15 @@ class TokenService {
   }
 
   Future<String?> getAccessToken() async {
-    return await _storage.read(key: _tokenKey);
+    final token = await _storage.read(key: _tokenKey);
+    print('Retrieved token: ${token?.substring(0, 10)}...'); // Debug log - only show first 10 chars
+    return token;
   }
 
   Future<bool> hasToken() async {
     final token = await getAccessToken();
-    return token != null;
+    print('Has token check result: ${token != null}'); // Debug log
+    return token != null && token.isNotEmpty;
   }
 
   Future<void> clearAll() async {
