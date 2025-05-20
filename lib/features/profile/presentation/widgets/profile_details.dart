@@ -3,6 +3,7 @@ import 'package:flutter_starter_mobile_app/models/user.dart';
 
 class ProfileDetails extends StatelessWidget {
   final User? user;
+  final int maxNameLength = 20;
 
   const ProfileDetails({
     super.key,
@@ -14,7 +15,13 @@ class ProfileDetails extends StatelessWidget {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  String _formatValue(String? value) {
+    if (value == null || value.isEmpty) return '';
+    if (value.length <= maxNameLength) return value;
+    return '${value.substring(0, maxNameLength)}...';
+  }
+
+  Widget _buildDetailRow(String label, String? value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -27,12 +34,16 @@ class ProfileDetails extends StatelessWidget {
               fontSize: 14,
             ),
           ),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+          Flexible(
+            child: Text(
+              _formatValue(value),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -50,11 +61,11 @@ class ProfileDetails extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildDetailRow('First Name', user?.firstName ?? ''),
-          _buildDetailRow('Middle Name', user?.middleName ?? ''),
-          _buildDetailRow('Last Name', user?.lastName ?? ''),
-          _buildDetailRow('Extension', user?.extensionName ?? ''),
-          _buildDetailRow('Username', user?.username ?? ''),
+          _buildDetailRow('First Name', user?.firstName),
+          _buildDetailRow('Middle Name', user?.middleName),
+          _buildDetailRow('Last Name', user?.lastName),
+          _buildDetailRow('Extension', user?.extensionName),
+          _buildDetailRow('Username', user?.username),
           _buildDetailRow('Member Since', _formatDate(user?.createdAt)),
           _buildDetailRow('Last Updated', _formatDate(user?.updatedAt)),
         ],

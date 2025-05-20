@@ -47,7 +47,7 @@ class ProfileMenu extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => EditProfileScreen(user: user!),
-              ),
+              ), 
             );
           } : null,
         ),
