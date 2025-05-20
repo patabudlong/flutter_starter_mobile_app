@@ -9,21 +9,32 @@ class ApiService {
   factory ApiService() => _instance;
   
   final TokenService _tokenService = TokenService();
-  final String baseUrl = dotenv.get('API_URL', fallback: 'http://localhost:8000');
+  final String baseUrl = dotenv.get('BASE_URL', fallback: 'http://localhost:8000');
 
   ApiService._internal();
 
   Future<bool> checkHealth() async {
     try {
+      print('Checking API health at: $baseUrl/health');
+      
       final response = await http.get(
         Uri.parse('$baseUrl/health'),
       ).timeout(
         const Duration(seconds: 5),
-        onTimeout: () => http.Response('Timeout', 408),
+        onTimeout: () {
+          print('Health check timeout after 5 seconds');
+          return http.Response('Timeout', 408);
+        },
       );
+
+      print('Health check status: ${response.statusCode}');
+      print('Health check response: ${response.body}');
 
       return response.statusCode == 200;
     } catch (e) {
+      print('Health check error:');
+      print('Error type: ${e.runtimeType}');
+      print('Error message: $e');
       return false;
     }
   }
