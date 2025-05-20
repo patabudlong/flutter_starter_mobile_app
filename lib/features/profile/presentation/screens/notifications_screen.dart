@@ -11,11 +11,25 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
+  // Store initial values
+  final Map<String, bool> _initialValues = {
+    'push': true,
+    'email': true,
+    'sms': false,
+  };
+
+  // Current values
   bool _pushEnabled = true;
   bool _emailEnabled = true;
   bool _smsEnabled = false;
-  bool _hasChanges = false;
   bool _isLoading = false;
+
+  // Check if current values differ from initial values
+  bool get _hasChanges {
+    return _pushEnabled != _initialValues['push'] ||
+           _emailEnabled != _initialValues['email'] ||
+           _smsEnabled != _initialValues['sms'];
+  }
 
   void _onSettingChanged(String type, bool value) {
     setState(() {
@@ -30,7 +44,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           _smsEnabled = value;
           break;
       }
-      _hasChanges = true;
     });
   }
 
@@ -147,7 +160,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
     setState(() {
       _isLoading = false;
-      _hasChanges = false;
     });
     
     if (mounted) {

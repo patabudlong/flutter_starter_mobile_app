@@ -11,12 +11,28 @@ class PrivacySettingsScreen extends StatefulWidget {
 }
 
 class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
+  // Store initial values
+  final Map<String, bool> _initialValues = {
+    'profile': true,
+    'location': false,
+    'activity': true,
+    'twoFactor': false,
+  };
+
+  // Current values
   bool _profileVisible = true;
   bool _locationEnabled = false;
   bool _activityVisible = true;
   bool _twoFactorEnabled = false;
-  bool _hasChanges = false;
   bool _isLoading = false;
+
+  // Check if current values differ from initial values
+  bool get _hasChanges {
+    return _profileVisible != _initialValues['profile'] ||
+           _locationEnabled != _initialValues['location'] ||
+           _activityVisible != _initialValues['activity'] ||
+           _twoFactorEnabled != _initialValues['twoFactor'];
+  }
 
   void _onSettingChanged(String type, bool value) {
     setState(() {
@@ -34,7 +50,6 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
           _twoFactorEnabled = value;
           break;
       }
-      _hasChanges = true;
     });
   }
 
@@ -151,7 +166,6 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
 
     setState(() {
       _isLoading = false;
-      _hasChanges = false;
     });
     
     if (mounted) {
