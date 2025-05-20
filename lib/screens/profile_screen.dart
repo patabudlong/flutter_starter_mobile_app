@@ -4,6 +4,7 @@ import 'package:flutter_starter_mobile_app/widgets/custom_app_bar.dart';
 import 'package:flutter_starter_mobile_app/services/token_service.dart';
 import 'package:flutter_starter_mobile_app/services/api_service.dart';
 import 'package:flutter_starter_mobile_app/models/user.dart';
+import 'package:flutter_starter_mobile_app/screens/edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -166,7 +167,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildProfileMenu() {
     return Column(
       children: [
-        _buildMenuItem(Icons.edit, 'Edit Profile'),
+        _buildMenuItem(
+          Icons.edit,
+          'Edit Profile',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditProfileScreen(user: _user!),
+              ),
+            );
+          },
+        ),
         _buildMenuItem(Icons.lock_outline, 'Change Password'),
         _buildMenuItem(Icons.notifications_outlined, 'Notifications'),
         _buildMenuItem(Icons.privacy_tip_outlined, 'Privacy Settings'),
@@ -174,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title) {
+  Widget _buildMenuItem(IconData icon, String title, {VoidCallback? onTap}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
@@ -194,9 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Icons.chevron_right,
           color: Colors.white,
         ),
-        onTap: () {
-          // Handle menu item tap
-        },
+        onTap: onTap,
       ),
     );
   }
