@@ -1,11 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
+import 'package:flutter_starter_mobile_app/widgets/custom_app_bar.dart';
 import 'package:flutter_starter_mobile_app/services/auth_service.dart';
 import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:flutter_starter_mobile_app/services/token_service.dart';
+import 'package:flutter_starter_mobile_app/services/api_service.dart';
+import 'package:flutter_starter_mobile_app/models/user.dart';
 
-class MoreScreen extends StatelessWidget {
+class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
+
+  @override
+  State<MoreScreen> createState() => _MoreScreenState();
+}
+
+class _MoreScreenState extends State<MoreScreen> {
+  final _apiService = ApiService();
+  User? _user;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final tokenService = TokenService();
+    final userData = await tokenService.getUserData();
+    
+    if (userData != null && userData['id'] != null) {
+      final response = await _apiService.getUserDetails(userData['id']);
+      if (response['success'] && mounted) {
+        setState(() {
+          _user = User.fromJson(response['data']);
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   Future<void> _handleLogout(BuildContext context) async {
     final authService = AuthService();
@@ -27,114 +61,144 @@ class MoreScreen extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          toolbarHeight: 80,
-          title: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: ThemeUtils.inputBackgroundColor,
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  child: Icon(
-                    Icons.person,
-                    color: ThemeUtils.textColor,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome back,',
-                      style: TextStyle(
-                        color: ThemeUtils.textColorSecondary,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      dotenv.get('APP_NAME', fallback: 'Your App'),
-                      style: TextStyle(
-                        color: ThemeUtils.textColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.mail_outline, color: Colors.white),
-                  onPressed: () {},
-                ),
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Text(
-                      '3',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            IconButton(
-              icon: const Icon(Icons.qr_code_scanner, color: Colors.white),
-              onPressed: () {},
-            ),
-          ],
+        appBar: CustomAppBar(
+          title: 'Settings',
+          showProfile: true,
+          showNotification: true,
+          showScanner: true,
+          userName: _user?.fullName,
+          userEmail: _user?.email,
+          userId: _user?.id,
+          firstName: _user?.firstName,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () => _handleLogout(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ThemeUtils.dangerColor,
-                    foregroundColor: ThemeUtils.textColor,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: ThemeUtils.borderRadius,
-                    ),
-                  ),
-                  child: const Text(
-                    'Logout',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+              _buildSectionTitle('Account'),
+              _buildMenuItem(
+                icon: Icons.person_outline,
+                title: 'Profile Settings',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.notifications_outlined,
+                title: 'Notifications',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.lock_outline,
+                title: 'Privacy',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.security,
+                title: 'Security',
+                onTap: () {},
+              ),
+              
+              const SizedBox(height: 24),
+              _buildSectionTitle('Preferences'),
+              _buildMenuItem(
+                icon: Icons.language,
+                title: 'Language',
+                subtitle: 'English',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.dark_mode_outlined,
+                title: 'Theme',
+                subtitle: 'Dark',
+                onTap: () {},
+              ),
+              
+              const SizedBox(height: 24),
+              _buildSectionTitle('Support'),
+              _buildMenuItem(
+                icon: Icons.help_outline,
+                title: 'Help Center',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.feedback_outlined,
+                title: 'Send Feedback',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                icon: Icons.info_outline,
+                title: 'About',
+                onTap: () {},
+              ),
+              
+              const SizedBox(height: 24),
+              _buildMenuItem(
+                icon: Icons.logout,
+                title: 'Logout',
+                textColor: ThemeUtils.dangerColor,
+                onTap: () => _handleLogout(context),
               ),
               const SizedBox(height: 24),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: Colors.white.withOpacity(0.7),
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuItem({
+    required IconData icon,
+    required String title,
+    String? subtitle,
+    Color? textColor,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: textColor ?? Colors.white,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: textColor ?? Colors.white,
+            fontSize: 16,
+          ),
+        ),
+        subtitle: subtitle != null
+          ? Text(
+              subtitle,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 14,
+              ),
+            )
+          : null,
+        trailing: const Icon(
+          Icons.chevron_right,
+          color: Colors.white,
+        ),
+        onTap: onTap,
       ),
     );
   }

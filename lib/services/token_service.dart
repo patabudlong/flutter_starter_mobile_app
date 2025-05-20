@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class TokenService {
@@ -22,7 +23,16 @@ class TokenService {
   }
 
   Future<void> saveUserData(Map<String, dynamic> userData) async {
-    await _storage.write(key: _userDataKey, value: userData.toString());
+    final userDataString = json.encode(userData);
+    await _storage.write(key: _userDataKey, value: userDataString);
+  }
+
+  Future<Map<String, dynamic>?> getUserData() async {
+    final userDataString = await _storage.read(key: _userDataKey);
+    if (userDataString != null) {
+      return json.decode(userDataString) as Map<String, dynamic>;
+    }
+    return null;
   }
 
   Future<String?> getAccessToken() async {
