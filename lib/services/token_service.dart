@@ -60,6 +60,10 @@ class TokenService {
     return token != null && token.isNotEmpty;
   }
 
+  Future<String?> getRefreshToken() async {
+    return await _storage.read(key: _refreshTokenKey);
+  }
+
   Future<void> clearAll() async {
     await _storage.deleteAll();
   }

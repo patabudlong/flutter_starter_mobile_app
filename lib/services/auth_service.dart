@@ -113,9 +113,8 @@ class AuthService {
 
       // Add backend verification
       try {
-        // Try to get user profile or another authenticated endpoint instead
         final response = await http.get(
-          Uri.parse('$baseUrl/users/profile'), // Change this to an actual authenticated endpoint
+          Uri.parse('$baseUrl/users/profile'), // Using profile endpoint
           headers: {
             'Authorization': 'Bearer $token',
           },
@@ -126,27 +125,59 @@ class AuthService {
 
         print('Token verification response: ${response.statusCode}'); // Debug log
         
+        // Only logout on explicit auth failures
         if (response.statusCode == 401 || response.statusCode == 403) {
-          print('Token invalid or expired'); // Debug log
-          await logout();
-          return false;
+          print('Token invalid - attempting refresh'); // Debug log
+          final refreshed = await refreshToken();
+          if (!refreshed) {
+            print('Token refresh failed'); // Debug log
+            await logout();
+            return false;
+          }
+          return true;
         }
         
         // Consider 404 as valid token but endpoint not found
         if (response.statusCode == 404) {
           print('Token valid but endpoint not found'); // Debug log
-          return true; // Token is still valid
+          return true; // Keep user logged in
         }
         
         return response.statusCode == 200;
       } catch (e) {
         print('Backend verification failed: $e'); // Debug log
-        // Don't logout on network errors
-        return true; // Assume token is valid if we can't verify
+        return true; // Keep user logged in on network errors
       }
     } catch (e) {
       print('Token validation error: $e'); // Debug log
-      await logout();
+      return true; // Keep user logged in on validation errors
+    }
+  }
+
+  // Add refresh token functionality
+  Future<bool> refreshToken() async {
+    try {
+      final refreshToken = await _tokenService.getRefreshToken();
+      if (refreshToken == null) return false;
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/refresh'),
+        headers: {
+          'Authorization': 'Bearer $refreshToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        await _tokenService.saveTokens(
+          accessToken: data['access_token'],
+          refreshToken: data['refresh_token'],
+        );
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Refresh token error: $e');
       return false;
     }
   }
