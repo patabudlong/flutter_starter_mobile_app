@@ -100,23 +100,22 @@ class AuthService {
 
       if (token == null || token.isEmpty) {
         print('No token found'); // Debug log
+        await logout();
         return false;
       }
 
       // Basic JWT format check
       if (token.split('.').length != 3) {
         print('Invalid token format'); // Debug log
+        await logout();
         return false;
       }
 
-      // Optional: Only verify with backend if you really need to
-      // For most cases, having a valid token format is enough
-      return true;
-
-      /* Comment out the backend verification for now
+      // Add backend verification
       try {
+        // Try to get user profile or another authenticated endpoint instead
         final response = await http.get(
-          Uri.parse('$baseUrl/auth/verify'),
+          Uri.parse('$baseUrl/users/profile'), // Change this to an actual authenticated endpoint
           headers: {
             'Authorization': 'Bearer $token',
           },
@@ -126,16 +125,41 @@ class AuthService {
         );
 
         print('Token verification response: ${response.statusCode}'); // Debug log
+        
+        if (response.statusCode == 401 || response.statusCode == 403) {
+          print('Token invalid or expired'); // Debug log
+          await logout();
+          return false;
+        }
+        
+        // Consider 404 as valid token but endpoint not found
+        if (response.statusCode == 404) {
+          print('Token valid but endpoint not found'); // Debug log
+          return true; // Token is still valid
+        }
+        
         return response.statusCode == 200;
       } catch (e) {
-        print('Backend verification failed, but token exists: $e'); // Debug log
-        return true; // Consider user logged in if we have a token but can't reach backend
+        print('Backend verification failed: $e'); // Debug log
+        // Don't logout on network errors
+        return true; // Assume token is valid if we can't verify
       }
-      */
     } catch (e) {
       print('Token validation error: $e'); // Debug log
+      await logout();
       return false;
     }
+  }
+
+  // Add a method to check auth status and redirect if needed
+  Future<bool> checkAuthAndRedirect() async {
+    final isValid = await validateToken();
+    if (!isValid) {
+      await logout();
+      navigateToLogin();
+      return false;
+    }
+    return true;
   }
 
   // Helper method for navigation
