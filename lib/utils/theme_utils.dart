@@ -31,6 +31,8 @@ class ThemeUtils {
         dotenv.get('THEME_WARNING', fallback: '#FFB300'),
       );
 
+  static Color get successColor => const Color(0xFF28A745);
+
   static LinearGradient get backgroundGradient => LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
