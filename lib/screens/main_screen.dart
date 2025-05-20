@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_mobile_app/screens/home_screen.dart';
-import 'package:flutter_starter_mobile_app/screens/profile_screen.dart';
+import 'package:flutter_starter_mobile_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:flutter_starter_mobile_app/screens/more_screen.dart';
+import 'package:flutter_starter_mobile_app/utils/theme_utils.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -55,9 +56,9 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Dashboard',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.explore_outlined),
-              activeIcon: Icon(Icons.explore),
-              label: 'Explore',
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.more_horiz),

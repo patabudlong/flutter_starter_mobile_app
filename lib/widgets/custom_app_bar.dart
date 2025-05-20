@@ -8,6 +8,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showProfile;
   final bool showNotification;
   final bool showScanner;
+  final Widget? leading;
   final VoidCallback? onProfileTap;
   final VoidCallback? onNotificationTap;
   final VoidCallback? onScannerTap;
@@ -23,6 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showProfile = true,
     this.showNotification = true,
     this.showScanner = true,
+    this.leading,
     this.onProfileTap,
     this.onNotificationTap,
     this.onScannerTap,
@@ -38,7 +40,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       toolbarHeight: 80,
-      title: showProfile ? _buildProfileTitle() : _buildSimpleTitle(),
+      title: title != null
+          ? Text(
+              title!,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            )
+          : _buildProfileTitle(),
+      leading: leading,
       actions: actions ?? _buildDefaultActions(),
     );
   }
@@ -79,33 +90,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   firstName ?? '',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                if (userId != null)
-                  Text(
-                    'ID: $userId',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
-                      fontSize: 12,
-                    ),
-                  ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSimpleTitle() {
-    return Text(
-      title ?? '',
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
       ),
     );
   }

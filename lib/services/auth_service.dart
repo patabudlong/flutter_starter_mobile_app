@@ -52,17 +52,22 @@ class AuthService {
         };
       }
 
+      if (response.statusCode == 401) {
+        // Clear tokens and redirect to login
+        await logout();
+        // You'll need to use a navigation service or context to navigate
+        // One approach is to use a static navigator key
+        navigateToLogin();
+        return {
+          'success': false,
+          'message': 'Invalid credentials',
+        };
+      }
+
       if (response.statusCode == 422) {
         return {
           'success': false,
           'message': 'Invalid request format',
-        };
-      }
-
-      if (response.statusCode == 401) {
-        return {
-          'success': false,
-          'message': 'Invalid credentials',
         };
       }
 
@@ -85,5 +90,85 @@ class AuthService {
 
   Future<bool> isAuthenticated() async {
     return await _tokenService.hasToken();
+  }
+
+  // Add this method to handle token validation
+  Future<bool> validateToken() async {
+    try {
+      final token = await _tokenService.getAccessToken();
+      print('Validating token: ${token?.substring(0, 10)}...'); // Debug log
+
+      if (token == null || token.isEmpty) {
+        print('No token found'); // Debug log
+        await logout();
+        return false;
+      }
+
+      // Basic JWT format check
+      if (token.split('.').length != 3) {
+        print('Invalid token format'); // Debug log
+        await logout();
+        return false;
+      }
+
+      // Add backend verification
+      try {
+        // Try to get user profile or another authenticated endpoint instead
+        final response = await http.get(
+          Uri.parse('$baseUrl/users/profile'), // Change this to an actual authenticated endpoint
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ).timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => http.Response('Timeout', 408),
+        );
+
+        print('Token verification response: ${response.statusCode}'); // Debug log
+        
+        if (response.statusCode == 401 || response.statusCode == 403) {
+          print('Token invalid or expired'); // Debug log
+          await logout();
+          return false;
+        }
+        
+        // Consider 404 as valid token but endpoint not found
+        if (response.statusCode == 404) {
+          print('Token valid but endpoint not found'); // Debug log
+          return true; // Token is still valid
+        }
+        
+        return response.statusCode == 200;
+      } catch (e) {
+        print('Backend verification failed: $e'); // Debug log
+        // Don't logout on network errors
+        return true; // Assume token is valid if we can't verify
+      }
+    } catch (e) {
+      print('Token validation error: $e'); // Debug log
+      await logout();
+      return false;
+    }
+  }
+
+  // Add a method to check auth status and redirect if needed
+  Future<bool> checkAuthAndRedirect() async {
+    final isValid = await validateToken();
+    if (!isValid) {
+      await logout();
+      navigateToLogin();
+      return false;
+    }
+    return true;
+  }
+
+  // Helper method for navigation
+  void navigateToLogin() {
+    // You'll need to implement this based on your navigation setup
+    // Option 1: Using GetX
+    // Get.offAll(() => LoginScreen());
+    
+    // Option 2: Using Navigator key
+    // GlobalNavigatorKey.navigatorKey.currentState?.pushReplacementNamed('/login');
   }
 } 

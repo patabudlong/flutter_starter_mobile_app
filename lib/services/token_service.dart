@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class TokenService {
@@ -16,10 +17,16 @@ class TokenService {
     required String accessToken,
     String? refreshToken,
   }) async {
+    print('Saving access token: ${accessToken.substring(0, math.min(10, accessToken.length))}...');
     await _storage.write(key: _tokenKey, value: accessToken);
     if (refreshToken != null) {
+      print('Saving refresh token: ${refreshToken.substring(0, math.min(10, refreshToken.length))}...');
       await _storage.write(key: _refreshTokenKey, value: refreshToken);
     }
+    
+    // Verify tokens were saved
+    final savedToken = await _storage.read(key: _tokenKey);
+    print('Verified saved token exists: ${savedToken != null}');
   }
 
   Future<void> saveUserData(Map<String, dynamic> userData) async {
@@ -36,12 +43,21 @@ class TokenService {
   }
 
   Future<String?> getAccessToken() async {
-    return await _storage.read(key: _tokenKey);
+    final token = await _storage.read(key: _tokenKey);
+    print('Getting access token from storage');
+    print('Token exists: ${token != null}');
+    if (token != null) {
+      print('Token first 10 chars: ${token.substring(0, math.min(10, token.length))}...');
+    } else {
+      print('No token found in storage');
+    }
+    return token;
   }
 
   Future<bool> hasToken() async {
     final token = await getAccessToken();
-    return token != null;
+    print('Has token check: ${token != null && token.isNotEmpty}');
+    return token != null && token.isNotEmpty;
   }
 
   Future<void> clearAll() async {
