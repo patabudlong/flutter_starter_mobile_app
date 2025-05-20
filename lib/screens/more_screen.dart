@@ -7,6 +7,7 @@ import 'package:flutter_starter_mobile_app/features/auth/presentation/screens/lo
 import 'package:flutter_starter_mobile_app/services/token_service.dart';
 import 'package:flutter_starter_mobile_app/services/api_service.dart';
 import 'package:flutter_starter_mobile_app/models/user.dart';
+import 'package:flutter_starter_mobile_app/widgets/discard_changes_modal.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
@@ -41,16 +42,27 @@ class _MoreScreenState extends State<MoreScreen> {
     }
   }
 
-  Future<void> _handleLogout(BuildContext context) async {
-    final authService = AuthService();
-    await authService.logout();
-    
-    if (context.mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-        (route) => false,
-      );
-    }
+  void _handleLogout() {
+    showDialog(
+      context: context,
+      builder: (context) => DiscardChangesModal(
+        title: 'Logout',
+        message: 'Are you sure you want to logout?',
+        confirmText: 'Logout',
+        cancelText: 'Cancel',
+        confirmColor: Colors.red.withOpacity(0.8),
+        onConfirm: () async {
+          final authService = AuthService();
+          await authService.logout();
+          if (mounted) {
+            Navigator.of(context).pushReplacementNamed('/login');
+          }
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    );
   }
 
   @override
@@ -136,7 +148,7 @@ class _MoreScreenState extends State<MoreScreen> {
                 icon: Icons.logout,
                 title: 'Logout',
                 textColor: ThemeUtils.dangerColor,
-                onTap: () => _handleLogout(context),
+                onTap: _handleLogout,
               ),
               const SizedBox(height: 24),
             ],
