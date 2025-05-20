@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_mobile_app/models/user.dart';
 import 'package:flutter_starter_mobile_app/features/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:flutter_starter_mobile_app/features/profile/presentation/screens/change_password_screen.dart';
 
 class ProfileMenu extends StatelessWidget {
   final User? user;
@@ -47,11 +48,22 @@ class ProfileMenu extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => EditProfileScreen(user: user!),
-              ), 
+              ),
             );
           } : null,
         ),
-        _buildMenuItem(Icons.lock_outline, 'Change Password'),
+        _buildMenuItem(
+          Icons.lock_outline, 
+          'Change Password',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ChangePasswordScreen(),
+              ),
+            );
+          },
+        ),
         _buildMenuItem(Icons.notifications_outlined, 'Notifications'),
         _buildMenuItem(Icons.privacy_tip_outlined, 'Privacy Settings'),
       ],
