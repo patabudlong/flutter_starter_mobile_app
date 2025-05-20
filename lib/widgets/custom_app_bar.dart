@@ -90,18 +90,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   firstName ?? '',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                if (userId != null)
-                  Text(
-                    'ID: $userId',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
-                      fontSize: 12,
-                    ),
-                  ),
               ],
             ),
           ),
