@@ -3,6 +3,7 @@ import 'package:flutter_starter_mobile_app/models/user.dart';
 import 'package:flutter_starter_mobile_app/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:flutter_starter_mobile_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:flutter_starter_mobile_app/features/profile/presentation/screens/notifications_screen.dart';
+import 'package:flutter_starter_mobile_app/features/profile/presentation/screens/privacy_settings_screen.dart';
 
 class ProfileMenu extends StatelessWidget {
   final User? user;
@@ -77,7 +78,18 @@ class ProfileMenu extends StatelessWidget {
             );
           },
         ),
-        _buildMenuItem(Icons.privacy_tip_outlined, 'Privacy Settings'),
+        _buildMenuItem(
+          Icons.privacy_tip_outlined, 
+          'Privacy Settings',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PrivacySettingsScreen(),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
