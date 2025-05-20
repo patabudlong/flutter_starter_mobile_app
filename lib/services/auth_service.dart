@@ -52,17 +52,22 @@ class AuthService {
         };
       }
 
+      if (response.statusCode == 401) {
+        // Clear tokens and redirect to login
+        await logout();
+        // You'll need to use a navigation service or context to navigate
+        // One approach is to use a static navigator key
+        navigateToLogin();
+        return {
+          'success': false,
+          'message': 'Invalid credentials',
+        };
+      }
+
       if (response.statusCode == 422) {
         return {
           'success': false,
           'message': 'Invalid request format',
-        };
-      }
-
-      if (response.statusCode == 401) {
-        return {
-          'success': false,
-          'message': 'Invalid credentials',
         };
       }
 
@@ -85,5 +90,38 @@ class AuthService {
 
   Future<bool> isAuthenticated() async {
     return await _tokenService.hasToken();
+  }
+
+  // Add this method to handle token validation
+  Future<bool> validateToken() async {
+    try {
+      final token = await _tokenService.getAccessToken();
+      if (token == null) {
+        return false;
+      }
+
+      // Optional: Verify token with backend
+      final response = await http.get(
+        Uri.parse('$baseUrl/auth/verify'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      print('Token validation error: $e');
+      return false;
+    }
+  }
+
+  // Helper method for navigation
+  void navigateToLogin() {
+    // You'll need to implement this based on your navigation setup
+    // Option 1: Using GetX
+    // Get.offAll(() => LoginScreen());
+    
+    // Option 2: Using Navigator key
+    // GlobalNavigatorKey.navigatorKey.currentState?.pushReplacementNamed('/login');
   }
 } 
